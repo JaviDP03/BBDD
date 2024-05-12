@@ -13,6 +13,140 @@ CREATE PROCEDURE hola_mundo()
 DELIMITER ;
 CALL hola_mundo();
 
+-- 4. Escribe un procedimiento que reciba un número real de entrada, que representa el valor de la nota de un alumno,
+-- y muestre un mensaje indicando qué nota ha obtenido teniendo en cuenta las siguientes condiciones:
+-- [0,5) = Insuficiente
+-- [5,6) = Aprobado
+-- [6, 7) = Bien
+-- [7, 9) = Notable
+-- [9, 10] = Sobresaliente
+-- En cualquier otro caso la nota no será válida.
+DELIMITER $$
+DROP PROCEDURE IF EXISTS tipo_nota_alumno$$
+CREATE PROCEDURE tipo_nota_alumno(IN nota_alumno FLOAT)
+	BEGIN
+		IF (nota_alumno <= 10 AND nota_alumno >= 9)
+			THEN SELECT 'Sobresaliente';
+		ELSEIF (nota_alumno < 9 AND nota_alumno >= 7)
+			THEN SELECT 'Notable';
+		ELSEIF (nota_alumno < 7 AND nota_alumno >= 6)
+			THEN SELECT 'Bien';
+		ELSEIF (nota_alumno < 6 AND nota_alumno >= 5)
+			THEN SELECT 'Suficiente';
+		ELSEIF (nota_alumno < 5 AND nota_alumno >= 0)
+			THEN SELECT 'Insuficiente';
+		ELSE
+			SELECT 'Nota no válida';
+        END IF;
+	END$$
+DELIMITER ;
+CALL tipo_nota_alumno(5.55);
+
+-- 5. Modifique el procedimiento diseñado en el ejercicio anterior para que tenga un parámetro de entrada,
+-- con el valor de la nota en formato numérico y un parámetro de salida, con una cadena de texto indicando la nota correspondiente.
+DELIMITER $$
+DROP PROCEDURE IF EXISTS tipo_nota_alumno2$$
+CREATE PROCEDURE tipo_nota_alumno2(IN nota_alumno FLOAT, OUT tipo_nota VARCHAR(20))
+	BEGIN
+		IF (nota_alumno <= 10 AND nota_alumno >= 9)
+			THEN SELECT 'Sobresaliente' INTO tipo_nota;
+		ELSEIF (nota_alumno < 9 AND nota_alumno >= 7)
+			THEN SELECT 'Notable' INTO tipo_nota;
+		ELSEIF (nota_alumno < 7 AND nota_alumno >= 6)
+			THEN SELECT 'Bien' INTO tipo_nota;
+		ELSEIF (nota_alumno < 6 AND nota_alumno >= 5)
+			THEN SELECT 'Suficiente' INTO tipo_nota;
+		ELSEIF (nota_alumno < 5 AND nota_alumno >= 0)
+			THEN SELECT 'Insuficiente' INTO tipo_nota;
+		ELSE
+			SELECT 'Nota no válida' INTO tipo_nota;
+        END IF;
+	END$$
+DELIMITER ;
+CALL tipo_nota_alumno2(5.55, @tipo_nota);
+SELECT @tipo_nota;
+
+-- 6. Resuelva el procedimiento diseñado en el ejercicio anterior haciendo uso de la estructura de control CASE.
+DELIMITER $$
+DROP PROCEDURE IF EXISTS tipo_nota_alumno3$$
+CREATE PROCEDURE tipo_nota_alumno3(IN nota_alumno FLOAT)
+	BEGIN
+    SELECT DISTINCT
+		CASE
+			WHEN (nota_alumno <= 10 AND nota_alumno >= 9)
+				THEN 'Sobresaliente'
+			WHEN (nota_alumno < 9 AND nota_alumno >= 7)
+				THEN 'Notable'
+			WHEN (nota_alumno < 7 AND nota_alumno >= 6)
+				THEN 'Bien'
+			WHEN (nota_alumno < 6 AND nota_alumno >= 5)
+				THEN 'Suficiente'
+			WHEN (nota_alumno < 5 AND nota_alumno >= 0)
+				THEN 'Insuficiente'
+			ELSE
+				'Nota no válida'
+        END AS TipoNota FROM fabricante;
+	END$$
+DELIMITER ;
+CALL tipo_nota_alumno3(5.55);
+
+-- 7. Escribe un procedimiento que reciba como parámetro de entrada un valor numérico que represente un día de la semana y
+-- que devuelva una cadena de caracteres con el nombre del día de la semana correspondiente.
+-- Por ejemplo, para el valor de entrada 1 debería devolver la cadena lunes. Resuelva el procedimiento haciendo uso de la estructura de control IF.
+DELIMITER $$
+DROP PROCEDURE IF EXISTS nombre_dia_semana$$
+CREATE PROCEDURE nombre_dia_semana(IN numero_dia FLOAT, OUT nombre_dia VARCHAR(20))
+	BEGIN
+		IF (numero_dia = 1)
+			THEN SET nombre_dia = 'Lunes';
+		ELSEIF (numero_dia = 2)
+			THEN SET nombre_dia = 'Martes';
+		ELSEIF (numero_dia = 3)
+			THEN SET nombre_dia = 'Miercoles';
+		ELSEIF (numero_dia = 4)
+			THEN SET nombre_dia = 'Jueves';
+		ELSEIF (numero_dia = 5)
+			THEN SET nombre_dia = 'Viernes';
+		ELSEIF (numero_dia = 6)
+			THEN SET nombre_dia = 'Sábado';
+		ELSEIF (numero_dia = 7)
+			THEN SET nombre_dia = 'Domingo';
+		ELSE
+			SET nombre_dia = 'Día no válido';
+        END IF;
+	END$$
+DELIMITER ;
+CALL nombre_dia_semana(4, @nombre_dia);
+SELECT @nombre_dia;
+
+-- 8. Resuelva el procedimiento diseñado en el ejercicio anterior haciendo uso de la estructura de control CASE.
+DELIMITER $$
+DROP PROCEDURE IF EXISTS nombre_dia_semana2$$
+CREATE PROCEDURE nombre_dia_semana2(IN numero_dia FLOAT)
+	BEGIN
+		SELECT DISTINCT
+        CASE
+			WHEN (numero_dia = 1)
+				THEN 'Lunes'
+			WHEN (numero_dia = 2)
+				THEN 'Martes'
+			WHEN (numero_dia = 3)
+				THEN 'Miercoles'
+			WHEN (numero_dia = 4)
+				THEN 'Jueves'
+			WHEN (numero_dia = 5)
+				THEN 'Viernes'
+			WHEN (numero_dia = 6)
+				THEN 'Sábado'
+			WHEN (numero_dia = 7)
+				THEN 'Domingo'
+			ELSE
+				'Día no válido'
+			END AS NombreDia FROM fabricante;
+	END$$
+DELIMITER ;
+CALL nombre_dia_semana2(4);
+
 -- 1.8.2
 -- 1. Escribe un procedimiento que reciba el nombre de un país como parámetro de entrada y
 -- realice una consulta sobre la tabla cliente para obtener todos los clientes que existen en la tabla de ese país.
