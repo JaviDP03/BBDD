@@ -25,16 +25,16 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS tipo_nota_alumno$$
 CREATE PROCEDURE tipo_nota_alumno(IN nota_alumno FLOAT)
 	BEGIN
-		IF (nota_alumno <= 10 AND nota_alumno >= 9)
-			THEN SELECT 'Sobresaliente';
-		ELSEIF (nota_alumno < 9 AND nota_alumno >= 7)
-			THEN SELECT 'Notable';
-		ELSEIF (nota_alumno < 7 AND nota_alumno >= 6)
-			THEN SELECT 'Bien';
-		ELSEIF (nota_alumno < 6 AND nota_alumno >= 5)
-			THEN SELECT 'Suficiente';
-		ELSEIF (nota_alumno < 5 AND nota_alumno >= 0)
-			THEN SELECT 'Insuficiente';
+		IF (nota_alumno <= 10 AND nota_alumno >= 9) THEN
+			SELECT 'Sobresaliente';
+		ELSEIF (nota_alumno < 9 AND nota_alumno >= 7) THEN
+			SELECT 'Notable';
+		ELSEIF (nota_alumno < 7 AND nota_alumno >= 6) THEN
+			SELECT 'Bien';
+		ELSEIF (nota_alumno < 6 AND nota_alumno >= 5) THEN
+			SELECT 'Suficiente';
+		ELSEIF (nota_alumno < 5 AND nota_alumno >= 0) THEN
+			SELECT 'Insuficiente';
 		ELSE
 			SELECT 'Nota no válida';
         END IF;
@@ -48,16 +48,16 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS tipo_nota_alumno2$$
 CREATE PROCEDURE tipo_nota_alumno2(IN nota_alumno FLOAT, OUT tipo_nota VARCHAR(20))
 	BEGIN
-		IF (nota_alumno <= 10 AND nota_alumno >= 9)
-			THEN SELECT 'Sobresaliente' INTO tipo_nota;
-		ELSEIF (nota_alumno < 9 AND nota_alumno >= 7)
-			THEN SELECT 'Notable' INTO tipo_nota;
-		ELSEIF (nota_alumno < 7 AND nota_alumno >= 6)
-			THEN SELECT 'Bien' INTO tipo_nota;
-		ELSEIF (nota_alumno < 6 AND nota_alumno >= 5)
-			THEN SELECT 'Suficiente' INTO tipo_nota;
-		ELSEIF (nota_alumno < 5 AND nota_alumno >= 0)
-			THEN SELECT 'Insuficiente' INTO tipo_nota;
+		IF (nota_alumno <= 10 AND nota_alumno >= 9) THEN
+			SELECT 'Sobresaliente' INTO tipo_nota;
+		ELSEIF (nota_alumno < 9 AND nota_alumno >= 7) THEN
+			SELECT 'Notable' INTO tipo_nota;
+		ELSEIF (nota_alumno < 7 AND nota_alumno >= 6) THEN
+			SELECT 'Bien' INTO tipo_nota;
+		ELSEIF (nota_alumno < 6 AND nota_alumno >= 5) THEN
+			SELECT 'Suficiente' INTO tipo_nota;
+		ELSEIF (nota_alumno < 5 AND nota_alumno >= 0) THEN
+			SELECT 'Insuficiente' INTO tipo_nota;
 		ELSE
 			SELECT 'Nota no válida' INTO tipo_nota;
         END IF;
@@ -72,16 +72,16 @@ DROP PROCEDURE IF EXISTS tipo_nota_alumno3$$
 CREATE PROCEDURE tipo_nota_alumno3(IN nota_alumno FLOAT, OUT tipo_nota VARCHAR(20))
 	BEGIN
 		CASE
-			WHEN (nota_alumno <= 10 AND nota_alumno >= 9)
-				THEN SET tipo_nota = 'Sobresaliente';
-			WHEN (nota_alumno < 9 AND nota_alumno >= 7)
-				THEN SET tipo_nota = 'Notable';
-			WHEN (nota_alumno < 7 AND nota_alumno >= 6)
-				THEN SET tipo_nota = 'Bien';
-			WHEN (nota_alumno < 6 AND nota_alumno >= 5)
-				THEN SET tipo_nota = 'Suficiente';
-			WHEN (nota_alumno < 5 AND nota_alumno >= 0)
-				THEN SET tipo_nota = 'Insuficiente';
+			WHEN (nota_alumno <= 10 AND nota_alumno >= 9) THEN
+				SET tipo_nota = 'Sobresaliente';
+			WHEN (nota_alumno < 9 AND nota_alumno >= 7) THEN
+				SET tipo_nota = 'Notable';
+			WHEN (nota_alumno < 7 AND nota_alumno >= 6) THEN
+				SET tipo_nota = 'Bien';
+			WHEN (nota_alumno < 6 AND nota_alumno >= 5) THEN
+				SET tipo_nota = 'Suficiente';
+			WHEN (nota_alumno < 5 AND nota_alumno >= 0) THEN
+				SET tipo_nota = 'Insuficiente';
 			ELSE
 				SET tipo_nota = 'Nota no válida';
         END CASE;
@@ -97,20 +97,20 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS nombre_dia_semana$$
 CREATE PROCEDURE nombre_dia_semana(IN numero_dia FLOAT, OUT nombre_dia VARCHAR(20))
 	BEGIN
-		IF (numero_dia = 1)
-			THEN SET nombre_dia = 'Lunes';
-		ELSEIF (numero_dia = 2)
-			THEN SET nombre_dia = 'Martes';
-		ELSEIF (numero_dia = 3)
-			THEN SET nombre_dia = 'Miercoles';
-		ELSEIF (numero_dia = 4)
-			THEN SET nombre_dia = 'Jueves';
-		ELSEIF (numero_dia = 5)
-			THEN SET nombre_dia = 'Viernes';
-		ELSEIF (numero_dia = 6)
-			THEN SET nombre_dia = 'Sábado';
-		ELSEIF (numero_dia = 7)
-			THEN SET nombre_dia = 'Domingo';
+		IF (numero_dia = 1) THEN
+			SET nombre_dia = 'Lunes';
+		ELSEIF (numero_dia = 2) THEN
+			SET nombre_dia = 'Martes';
+		ELSEIF (numero_dia = 3) THEN
+			SET nombre_dia = 'Miercoles';
+		ELSEIF (numero_dia = 4) THEN
+			SET nombre_dia = 'Jueves';
+		ELSEIF (numero_dia = 5) THEN
+			SET nombre_dia = 'Viernes';
+		ELSEIF (numero_dia = 6) THEN
+			SET nombre_dia = 'Sábado';
+		ELSEIF (numero_dia = 7) THEN
+			SET nombre_dia = 'Domingo';
 		ELSE
 			SET nombre_dia = 'Día no válido';
         END IF;
@@ -125,20 +125,20 @@ DROP PROCEDURE IF EXISTS nombre_dia_semana2$$
 CREATE PROCEDURE nombre_dia_semana2(IN numero_dia FLOAT, OUT nombre_dia VARCHAR(20))
 	BEGIN
 		CASE
-			WHEN (numero_dia = 1)
-				THEN SET nombre_dia = 'Lunes';
-			WHEN (numero_dia = 2)
-				THEN SET nombre_dia = 'Martes';
-			WHEN (numero_dia = 3)
-				THEN SET nombre_dia = 'Miercoles';
-			WHEN (numero_dia = 4)
-				THEN SET nombre_dia = 'Jueves';
-			WHEN (numero_dia = 5)
-				THEN SET nombre_dia = 'Viernes';
-			WHEN (numero_dia = 6)
-				THEN SET nombre_dia = 'Sábado';
-			WHEN (numero_dia = 7)
-				THEN SET nombre_dia = 'Domingo';
+			WHEN (numero_dia = 1) THEN
+				SET nombre_dia = 'Lunes';
+			WHEN (numero_dia = 2) THEN
+				SET nombre_dia = 'Martes';
+			WHEN (numero_dia = 3) THEN
+				SET nombre_dia = 'Miercoles';
+			WHEN (numero_dia = 4) THEN
+				SET nombre_dia = 'Jueves';
+			WHEN (numero_dia = 5) THEN
+				SET nombre_dia = 'Viernes';
+			WHEN (numero_dia = 6) THEN
+				SET nombre_dia = 'Sábado';
+			WHEN (numero_dia = 7) THEN
+				SET nombre_dia = 'Domingo';
 			ELSE
 				SET nombre_dia = 'Día no válido';
 			END CASE;
@@ -241,10 +241,11 @@ CREATE PROCEDURE calcular_cuadrados2(IN tope INT UNSIGNED)
 		DELETE FROM cuadrados;
         bucle_numeros: LOOP
 			INSERT INTO cuadrados VALUES (contador_numeros, POWER(contador_numeros, 2));
-            IF contador_numeros = tope THEN
-				LEAVE bucle_numeros;
-			END IF;
             SET contador_numeros = contador_numeros + 1;
+            IF contador_numeros <= tope THEN
+				ITERATE bucle_numeros;
+			END IF;
+            LEAVE bucle_numeros;
 		END LOOP bucle_numeros;
     END$$
 DELIMITER ;
@@ -296,10 +297,11 @@ CREATE PROCEDURE calcular_numeros2(IN valor_inicial INT UNSIGNED)
 		DELETE FROM ejercicio;
 		bucle_numeros: LOOP
 			INSERT INTO ejercicio VALUES (contador_numeros);
-            IF contador_numeros = 1 THEN
-				LEAVE bucle_numeros;
-			END IF;
             SET contador_numeros = contador_numeros - 1;
+            IF (contador_numeros >= 1) THEN
+				ITERATE bucle_numeros;
+			END IF;
+            LEAVE bucle_numeros;
 		END LOOP bucle_numeros;
     END$$
 DELIMITER ;
@@ -366,10 +368,11 @@ CREATE PROCEDURE calcular_pares_impares2(IN tope INT UNSIGNED)
 			ELSE
 				INSERT INTO impares VALUES (contador_numeros);
 			END IF;
-            IF contador_numeros = tope THEN
-				LEAVE bucle_numeros;
-			END IF;
             SET contador_numeros = contador_numeros + 1;
+            IF contador_numeros <= tope THEN
+				ITERATE bucle_numeros;
+			END IF;
+            LEAVE bucle_numeros;
 		END LOOP bucle_numeros;
     END$$
 DELIMITER ;
