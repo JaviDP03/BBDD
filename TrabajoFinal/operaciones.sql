@@ -1,6 +1,7 @@
 USE tienda_musica;
 
 -- Consultas
+-- Por agrupación
 -- 1. Consulta del artista junto con el número de canciones que ha escrito.
 SELECT a.nombre, a.edad, a.seguidores, COUNT(c.id) AS canciones_escritas FROM artista a, escribe e, cancion c
 WHERE a.id = e.id_artista AND c.id = e.id_cancion GROUP BY a.id;
@@ -9,6 +10,7 @@ WHERE a.id = e.id_artista AND c.id = e.id_cancion GROUP BY a.id;
 SELECT c.titulo, c.genero, c.duracion, a.nombre AS nombre_album FROM cancion c, album a
 WHERE a.id = c.id_album;
 
+-- Subconsultas
 -- 3. Consulta del álbum o álbumes con la cantidad de canciones escritas por artistas que tienen más de 50 años.
 SELECT a.nombre, a.fecha_lanzamiento,
 	(SELECT COUNT(*) FROM artista ar
@@ -24,6 +26,7 @@ SELECT a.nombre,
 		(SELECT id_cancion FROM escribe e WHERE e.id_artista = a.id)) AS discos_vendidos
 FROM artista a;
 
+-- Left/Right Join
 -- 5. Consulta del numero de disco y el dni del cliente incluyendo los que no han sido comprados.
 SELECT d.numero, c.dni FROM disco d
 LEFT JOIN compra co ON d.numero = co.num_disco 
@@ -67,6 +70,7 @@ WHERE d.estado = 'Nuevo';
 SELECT * FROM vista_discos_nuevos;
 
 -- Procedimientos
+-- Parámetro IN
 -- 1. Procedimiento que suma los precios de los discos hasta el id que se indique por parámetro.
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sumar_precios_hasta_numero$$
@@ -109,6 +113,7 @@ DELIMITER ;
 
 CALL album_novedoso('Sonidos de la Tierra');
 
+-- Parámetro OUT
 -- 3. Procedimiento que devuelve el número más grande de seguidores y los duplica si supera 25000 seguidores.
 DELIMITER $$
 DROP PROCEDURE IF EXISTS duplicar_mayor_numero_seguidores$$
@@ -146,6 +151,7 @@ DELIMITER ;
 CALL subida_precios(@nuevo_precio);
 SELECT ROUND(@nuevo_precio, 2) AS nuevo_precio;
 
+-- Parámetro INOUT
 -- 5. Procedimiento para bajar seguidores de un artista por id. Si la cantidad recibida por parámetro es menor al 20% de sus seguidores, entonces se resta.
 DELIMITER $$
 DROP PROCEDURE IF EXISTS bajada_seguidores$$
@@ -172,7 +178,7 @@ CREATE PROCEDURE nombre_artista_por_cancion(INOUT texto_cancion VARCHAR(20))
 	BEGIN
 		DECLARE genero_cancion VARCHAR(10);
         
-		SELECT genero FROM cancion WHERE titulo = texto_cancion;
+		SELECT genero INTO genero_cancion FROM cancion WHERE titulo = texto_cancion;
         
 		IF (genero_cancion = 'Pop') THEN
 			SELECT a.nombre INTO texto_cancion FROM artista a JOIN escribe e ON a.id = e.id_artista WHERE e.id_cancion = 
@@ -186,3 +192,116 @@ DELIMITER ;
 SET @texto_cancion = 'Sueños de Libertad';
 CALL nombre_artista_por_cancion(@texto_cancion);
 SELECT @texto_cancion;
+
+-- Funciones
+-- Actualizar
+-- 1. Función que actualiza un artista y devuelve los nuevos datos.
+DELIMITER $$
+DROP FUNCTION IF EXISTS actualizar_artista$$
+CREATE FUNCTION actualizar_artista(id_artista INT, nuevo_nombre VARCHAR(30), nueva_edad INT, nuevos_seguidores INT)
+RETURNS VARCHAR(100) DETERMINISTIC
+BEGIN
+	DECLARE mensaje_actualizado VARCHAR(100);
+
+	UPDATE artista SET
+		nombre = nuevo_nombre,
+		edad = nueva_edad,
+        seguidores = nuevos_seguidores
+	WHERE id = id_artista;
+
+	SET mensaje_actualizado = CONCAT('El artista ha sido actualizado con nombre ', nuevo_nombre, ', ', nueva_edad, ' años y ', nuevos_seguidores, ' seguidores' );
+
+	RETURN mensaje_actualizado;
+END$$
+DELIMITER ;
+
+SELECT actualizar_artista(2, 'Manolo Díaz', 33, 20500) AS artista_actualizado;
+
+-- Insertar
+-- 2. Función que inserta un cliente y devuelve los nuevos datos.
+DELIMITER $$
+DROP FUNCTION IF EXISTS insertar_cliente$$
+CREATE FUNCTION insertar_cliente(nuevo_nombre VARCHAR(30), nuevos_apellidos VARCHAR(40), nuevo_dni CHAR(9), nueva_fecha_nacimiento DATE, nueva_direccion VARCHAR(50))
+RETURNS VARCHAR(200) DETERMINISTIC
+BEGIN
+	DECLARE mensaje_actualizado VARCHAR(200);
+
+	INSERT INTO cliente (nombre, apellidos, dni, fecha_nacimiento, direccion) VALUES
+		(nuevo_nombre, nuevos_apellidos, nuevo_dni, nueva_fecha_nacimiento, nueva_direccion);
+
+	SET mensaje_actualizado =
+		CONCAT('El cliente ha sido añadido con nombre ', nuevo_nombre, ' ', nuevos_apellidos, ', DNI ', nuevo_dni, ', fecha de nacimiento ', nueva_fecha_nacimiento, ' y dirección ', nueva_direccion);
+
+	RETURN mensaje_actualizado;
+END$$
+DELIMITER ;
+
+SELECT insertar_cliente('Pepe', 'González López', '32543567V', '1999-08-12', 'Calle Nueva, 7') AS cliente_insertado;
+
+-- Borrar
+-- 3. Función que borra un disco.
+DELIMITER $$
+DROP FUNCTION IF EXISTS borrar_disco$$
+CREATE FUNCTION borrar_disco(numero_disco INT)
+RETURNS VARCHAR(100) DETERMINISTIC
+BEGIN
+	DECLARE mensaje_actualizado VARCHAR(100);
+
+	DELETE FROM disco WHERE numero = numero_disco;
+    
+	SET mensaje_actualizado =
+		CONCAT('Disco número ', numero_disco, ' borrado con éxito');
+
+	RETURN mensaje_actualizado;
+END$$
+DELIMITER ;
+
+SELECT borrar_disco(1) AS disco_borrado;
+
+-- Cursores
+-- Procedimiento con cursor que cada año suma 1 a la edad del artista, sube 100 seguidores si tiene menos de 50 años.
+-- Si sube de seguidores, sube el precio de sus discos 30 céntimos, de lo contrario, los baja.
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sumar_anno$$
+CREATE PROCEDURE sumar_anno()
+BEGIN
+	DECLARE done BOOLEAN DEFAULT FALSE;
+	DECLARE artista_id INT;
+	DECLARE artista_edad INT;
+	DECLARE artista_seguidores INT;
+    
+	DECLARE artista_cursor CURSOR FOR
+		SELECT id, edad, seguidores
+		FROM artista;
+        
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+	OPEN artista_cursor;
+		ciclo_actualizar: LOOP
+			FETCH artista_cursor INTO artista_id, artista_edad, artista_seguidores;
+
+			IF (done = true) THEN
+				LEAVE ciclo_actualizar;
+			END IF;
+
+			-- Actualizar la edad del artista
+			SET artista_edad = artista_edad + 1;
+
+			-- Actualizar los seguidores del artista
+			IF artista_edad < 50 THEN
+				SET artista_seguidores = artista_seguidores + 100;
+			ELSE
+				SET artista_seguidores = artista_seguidores - 100;
+			END IF;
+			
+            UPDATE artista SET
+				edad = artista_edad,
+                seguidores = artista_seguidores
+			WHERE id = artista_id;
+            
+		END LOOP;
+	CLOSE artista_cursor;
+END$$
+DELIMITER ;
+
+CALL sumar_anno();

@@ -35,7 +35,7 @@ CREATE TABLE cancion (
     genero VARCHAR(20),
     duracion VARCHAR(10),
     id_album INT,
-    CONSTRAINT fk_cancion FOREIGN KEY (id_album) REFERENCES album (id)
+    CONSTRAINT fk_cancion FOREIGN KEY (id_album) REFERENCES album (id) ON DELETE CASCADE
 );
 
 -- Tabla escribe
@@ -43,8 +43,8 @@ CREATE TABLE escribe (
 	id_artista INT,
     id_cancion INT,
     CONSTRAINT pk_escribe PRIMARY KEY (id_artista, id_cancion),
-    CONSTRAINT fk_escribe FOREIGN KEY (id_artista) REFERENCES artista (id),
-    CONSTRAINT fk_escribe2 FOREIGN KEY (id_cancion) REFERENCES cancion (id)
+    CONSTRAINT fk_escribe FOREIGN KEY (id_artista) REFERENCES artista (id) ON DELETE CASCADE,
+    CONSTRAINT fk_escribe2 FOREIGN KEY (id_cancion) REFERENCES cancion (id) ON DELETE CASCADE
 );
 
 -- Tabla Disco
@@ -53,7 +53,7 @@ CREATE TABLE disco (
     estado VARCHAR(10),
     precio FLOAT,
     id_cancion INT,
-    CONSTRAINT fk_disco FOREIGN KEY (id_cancion) REFERENCES cancion (id),
+    CONSTRAINT fk_disco FOREIGN KEY (id_cancion) REFERENCES cancion (id) ON DELETE CASCADE,
     CONSTRAINT check_estado CHECK (estado IN ('Nuevo', 'Usado'))
 );
 
@@ -73,6 +73,6 @@ CREATE TABLE compra (
     id_cliente INT,
     fecha_compra DATE,
     CONSTRAINT pk_compra PRIMARY KEY (num_disco, id_cliente),
-    CONSTRAINT fk_compra FOREIGN KEY (num_disco) REFERENCES disco (numero),
-    CONSTRAINT fk_compra2 FOREIGN KEY (id_cliente) REFERENCES cliente (id)
+    CONSTRAINT fk_compra FOREIGN KEY (num_disco) REFERENCES disco (numero) ON DELETE CASCADE,
+    CONSTRAINT fk_compra2 FOREIGN KEY (id_cliente) REFERENCES cliente (id) ON DELETE CASCADE
 );
