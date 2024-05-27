@@ -260,7 +260,6 @@ SELECT borrar_disco(1) AS disco_borrado;
 
 -- Cursores
 -- Procedimiento con cursor que cada año suma 1 a la edad del artista, sube 100 seguidores si tiene menos de 50 años.
--- Si sube de seguidores, sube el precio de sus discos 30 céntimos, de lo contrario, los baja.
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sumar_anno$$
 CREATE PROCEDURE sumar_anno()
