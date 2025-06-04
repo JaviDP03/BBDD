@@ -2,7 +2,7 @@
 
 [![MySQL 8.0](https://img.shields.io/badge/MySQL-8.0-blue?logo=mysql&logoColor=white)](https://www.mysql.com/)
 
-Este repositorio contiene material del módulo **Bases de Datos** (BBDD) de ciclos formativos. El lenguaje principal trabajado es **SQL** (con énfasis en MySQL y PLSQL).
+Este repositorio contiene material del módulo **Bases de Datos** (BBDD) de 2ºDAW. El lenguaje principal trabajado es **SQL** (con énfasis en MySQL y PLSQL).
 
 ## 📁 Estructura del repositorio
 
